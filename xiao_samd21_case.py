@@ -23,7 +23,8 @@ PIN_ROW_Y = 15.24 / 2  # pin rows at +-7.62 from center
 PINS = 7
 
 # --- Case --------------------------------------------------------------------
-HEADERS = True        # True: slots for male headers (fits a breadboard)
+HEADERS = True        # True: raise the PCB by the header height
+HEADER_SLOTS = False  # True: cut floor slots for the male headers (fits a breadboard)
 HEADER_H = 2.5        # header plastic height (= PCB height above the bottom)
 CLR = 0.25            # PCB-to-wall clearance
 WALL = 1.6
@@ -77,7 +78,7 @@ def base():
         b += box(ledge, IN_W, PCB_Z - FLOOR, x=s * (IN_L - ledge) / 2, z=FLOOR)
     # center support
     b += box(4.0, 6.0, PCB_Z - FLOOR, z=FLOOR)
-    if HEADERS:
+    if HEADER_SLOTS:
         for s in (-1, 1):
             b -= box(slot_len, 2.9, FLOOR + 2, y=s * PIN_ROW_Y, z=-1)
     # U-shaped USB-C opening, open at the top (the PCB drops in from above)

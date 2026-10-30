@@ -4,7 +4,7 @@ Two-part case (base + snap-fit lid) for the
 [Seeed Studio XIAO SAMD21](https://wiki.seeedstudio.com/Seeeduino-XIAO/).
 
 - Outer size: **24.7 × 21.5 × 8.5 mm**
-- Bottom slots for male headers: the case sits flush with the header plastic and plugs into a breadboard.
+- Flat bottom: no floor slots for the male headers (set `HEADER_SLOTS = True` to cut them).
 - USB-C opening with an outer recess for the cable overmold.
 - Lid windows to see the LEDs and reach the RESET pads.
 
@@ -63,7 +63,7 @@ Notes:
 
 ## Assembly
 
-1. Solder the male headers with the pins facing down (if `HEADERS = True`).
+1. Skip the male headers, or solder them only if `HEADER_SLOTS = True`.
 2. Drop the board into the base from above, with the USB-C towards the U opening.
 3. Press the lid on: the lip goes into the base and the 4 posts hold the PCB at the corners.
 4. To reset, short the pads through the window with tweezers.
@@ -76,7 +76,8 @@ All dimensions are at the top of `xiao_samd21_case.py`. Measure the board with c
 |---|---|---|
 | `LIP_CLR` | 0.15 | Lid too tight: 0.2. Lid too loose: 0.1 |
 | `CLR` | 0.25 | Clearance between PCB and wall |
-| `HEADERS` | `True` | `False` for a closed bottom, no headers |
+| `HEADERS` | `True` | `False` to lower the PCB (no header height) |
+| `HEADER_SLOTS` | `False` | `True` to cut floor slots for male headers |
 | `PCB_T` | 1.2 | Actual PCB thickness |
 | `USB_OVERHANG` | 1.0 | How far the USB-C sticks out past the PCB |
 | `WIN_Y`, `WIN_X_FROM_USB_END` | 6.2, 0.8 | Position of the LED/RESET windows |

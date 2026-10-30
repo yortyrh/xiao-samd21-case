@@ -130,7 +130,7 @@ def board(z0):
     pcb = c.box(c.PCB_L, c.PCB_W, c.PCB_T, z=z0)
     usb = c.box(7.4, c.USB_W, c.USB_H, x=-c.PCB_L / 2 - c.USB_OVERHANG + 3.7, z=z0 + c.PCB_T)
     parts = [(pcb, PCB_COLOR), (usb, USB_COLOR)]
-    if c.HEADERS:
+    if c.HEADER_SLOTS:
         for s in (-1, 1):
             hdr = c.box(c.PINS * c.PIN_PITCH, c.PIN_PITCH, c.HEADER_H, y=s * c.PIN_ROW_Y, z=z0 - c.HEADER_H)
             parts.append((hdr, HEADER_COLOR))
