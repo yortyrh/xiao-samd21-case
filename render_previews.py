@@ -10,6 +10,7 @@ import zlib
 from pathlib import Path
 
 import numpy as np
+from manifold3d import Manifold, Mesh
 
 import xiao_samd21_case as c
 
@@ -22,6 +23,9 @@ LID_COLOR = (0.38, 0.65, 0.98)
 PCB_COLOR = (0.12, 0.44, 0.25)
 USB_COLOR = (0.75, 0.77, 0.80)
 HEADER_COLOR = (0.16, 0.16, 0.18)
+BOARD_MODEL_DIR = Path("board_model")   # STLs from step_to_stl.py (the GrabCAD model, not in the repo)
+BOARD_MODEL_COLORS = [(0.78, 0.80, 0.83), (0.88, 0.88, 0.86), (0.10, 0.10, 0.12),
+                      (0.20, 0.20, 0.22), (0.72, 0.74, 0.78)]   # shield, label, PCB, USB inner, USB shell
 EDGE_COLOR = np.array((0.08, 0.10, 0.16))
 
 
@@ -125,7 +129,25 @@ def write_png(img, path):
         f.write(chunk(b"IEND", b""))
 
 
+def load_stl(path):
+    raw = path.read_bytes()
+    n = struct.unpack("<I", raw[80:84])[0]
+    rec = np.frombuffer(raw[84:84 + 50 * n], dtype=np.dtype([("n", "<3f4"), ("v", "<9f4"), ("a", "<u2")]))
+    pts = rec["v"].reshape(-1, 3).astype(np.float64)
+    uniq, inv = np.unique(np.round(pts, 4), axis=0, return_inverse=True)
+    m = Manifold(Mesh(uniq.astype(np.float32), inv.reshape(-1, 3).astype(np.uint32)))
+    return m.merge() if hasattr(m, "merge") else m
+
+
 def board(z0):
+    """The real XIAO model if board_model/ exists, else a simple stand-in."""
+    files = sorted(BOARD_MODEL_DIR.glob("part*.stl"))
+    if files:
+        return [(load_stl(f).translate((0, 0, z0)), col) for f, col in zip(files, BOARD_MODEL_COLORS)]
+    return board_stand_in(z0)
+
+
+def board_stand_in(z0):
     """Simple XIAO stand-in: PCB, USB-C receptacle and (optionally) pin headers."""
     pcb = c.box(c.PCB_L, c.PCB_W, c.PCB_T, z=z0)
     usb = c.box(7.4, c.USB_W, c.USB_H, x=-c.PCB_L / 2 - c.USB_OVERHANG + 3.7, z=z0 + c.PCB_T)

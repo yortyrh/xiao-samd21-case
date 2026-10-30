@@ -9,3 +9,9 @@ __pycache__/
 # Editors
 .idea/
 .vscode/
+
+# third-party board model (GrabCAD), converted locally
+board_model/
+*.step
+*.f3d
+seeeduino-xiao-samd21-3d-model.zip
