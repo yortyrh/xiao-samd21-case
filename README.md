@@ -18,7 +18,17 @@ Two-part case (base + snap-fit lid) for the
 |---|---|
 | ![Base](images/base.png) | ![Lid underside](images/lid_bottom.png) |
 
-The board in the exploded view is a simplified stand-in (PCB plus USB-C), not the real module.
+The board in these views is a simplified stand-in (PCB, USB-C and pin headers), not the real module.
+
+## Board fit
+
+The board sits on its pin headers, with the USB-C pointing out of the U opening. The case is 3.7 mm longer and wider than the board: 0.25 mm of clearance plus a 1.6 mm wall on each side.
+
+![Board seated in the base, lid removed](images/board_in_base.png)
+
+Cross-section through the middle of the case (the front half is removed). The lid posts stop 0.2 mm above the PCB, and the lid window sits over the LED/RESET area:
+
+![Cross-section of the assembled case](images/cutaway.png)
 
 ## Files
 

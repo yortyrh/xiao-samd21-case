@@ -21,6 +21,7 @@ CASE_COLOR = (0.23, 0.51, 0.96)
 LID_COLOR = (0.38, 0.65, 0.98)
 PCB_COLOR = (0.12, 0.44, 0.25)
 USB_COLOR = (0.75, 0.77, 0.80)
+HEADER_COLOR = (0.16, 0.16, 0.18)
 EDGE_COLOR = np.array((0.08, 0.10, 0.16))
 
 
@@ -125,10 +126,20 @@ def write_png(img, path):
 
 
 def board(z0):
-    """Simple XIAO stand-in: PCB plus USB-C receptacle."""
+    """Simple XIAO stand-in: PCB, USB-C receptacle and (optionally) pin headers."""
     pcb = c.box(c.PCB_L, c.PCB_W, c.PCB_T, z=z0)
     usb = c.box(7.4, c.USB_W, c.USB_H, x=-c.PCB_L / 2 - c.USB_OVERHANG + 3.7, z=z0 + c.PCB_T)
-    return [(pcb, PCB_COLOR), (usb, USB_COLOR)]
+    parts = [(pcb, PCB_COLOR), (usb, USB_COLOR)]
+    if c.HEADERS:
+        for s in (-1, 1):
+            hdr = c.box(c.PINS * c.PIN_PITCH, c.PIN_PITCH, c.HEADER_H, y=s * c.PIN_ROW_Y, z=z0 - c.HEADER_H)
+            parts.append((hdr, HEADER_COLOR))
+    return parts
+
+
+def cut_half(m):
+    """Remove the y > 0 half so the inside is visible from the +Y side."""
+    return m - c.box(100, 50, 100, y=25, z=-50)
 
 
 if __name__ == "__main__":
@@ -141,5 +152,10 @@ if __name__ == "__main__":
     render([(base, CASE_COLOR), *board(c.PCB_Z + 8),
             (lid.translate((0, 0, c.BASE_H + 20)), LID_COLOR)],
            OUT_DIR / "exploded.png", elev=20, azim=-140)
+    seated = board(c.PCB_Z)
+    render([(base, CASE_COLOR), *seated], OUT_DIR / "board_in_base.png", elev=50, azim=-125)
+    section = [(cut_half(base), CASE_COLOR), *[(cut_half(m), col) for m, col in seated],
+               (cut_half(lid.translate((0, 0, c.BASE_H))), LID_COLOR)]
+    render(section, OUT_DIR / "cutaway.png", elev=22, azim=70)
     render([(base, CASE_COLOR)], OUT_DIR / "base.png", elev=55, azim=-120)
     render([(lid.rotate((180, 0, 0)), LID_COLOR)], OUT_DIR / "lid_bottom.png", elev=45, azim=-120)
