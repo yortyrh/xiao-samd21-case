@@ -6,7 +6,6 @@ Two-part case (base + snap-fit lid) for the
 - Outer size: **24.7 × 21.5 × 8.5 mm**
 - Flat bottom: no floor slots for the male headers (set `HEADER_SLOTS = True` to cut them).
 - USB-C opening with an outer recess for the cable overmold.
-- Lid windows to see the LEDs and reach the RESET pads.
 
 ![Assembled case](images/assembled.png)
 
@@ -26,7 +25,7 @@ The board sits on its pin headers, with the USB-C pointing out of the U opening.
 
 ![Board seated in the base, lid removed](images/board_in_base.png)
 
-Cross-section through the middle of the case (the front half is removed). The lid posts stop 0.2 mm above the PCB, and the lid window sits over the LED/RESET area:
+Cross-section through the middle of the case (the front half is removed). The lid posts stop 0.2 mm above the PCB:
 
 ![Cross-section of the assembled case](images/cutaway.png)
 
@@ -58,7 +57,6 @@ The parts come already oriented: do not rotate them.
 Notes:
 
 - The USB-C opening is a U open at the top; it needs no bridge or supports.
-- Disable ironing on the lid if the windows lose definition.
 - With PETG, slow down outer walls to keep the fit tolerance.
 
 ## Assembly
@@ -66,7 +64,6 @@ Notes:
 1. Skip the male headers, or solder them only if `HEADER_SLOTS = True`.
 2. Drop the board into the base from above, with the USB-C towards the U opening.
 3. Press the lid on: the lip goes into the base and the 4 posts hold the PCB at the corners.
-4. To reset, short the pads through the window with tweezers.
 
 ## Tuning
 
@@ -80,7 +77,6 @@ All dimensions are at the top of `xiao_samd21_case.py`. Measure the board with c
 | `HEADER_SLOTS` | `False` | `True` to cut floor slots for male headers |
 | `PCB_T` | 1.2 | Actual PCB thickness |
 | `USB_OVERHANG` | 1.0 | How far the USB-C sticks out past the PCB |
-| `WIN_Y`, `WIN_X_FROM_USB_END` | 6.2, 0.8 | Position of the LED/RESET windows |
 
 ## Regenerating the models
 

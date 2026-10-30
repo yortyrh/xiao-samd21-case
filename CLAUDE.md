@@ -21,7 +21,7 @@ All Python work goes through [uv](https://docs.astral.sh/uv/). Never use `pip` o
 ## Conventions
 
 - Everything in the project is in English: code, identifiers, comments, docs, commit messages, file names. No spaces in folder or file names.
-- PCB size and thickness, USB-C size and overhang come from the GrabCAD model (Seeeduino XIAO SAMD21 v4), not the datasheet. LED/RESET window positions were checked against its top view. Say so when they matter.
+- PCB size and thickness, USB-C size and overhang come from the GrabCAD model (Seeeduino XIAO SAMD21 v4), not the datasheet. Say so when they matter.
 - Regenerating the 3MF files changes the zip timestamps even when the model is identical. Do not commit 3MF files that differ only in that.
 
 ## Commits
