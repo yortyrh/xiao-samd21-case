@@ -8,6 +8,18 @@ Two-part case (base + snap-fit lid) for the
 - USB-C opening with an outer recess for the cable overmold.
 - Lid windows to see the LEDs and reach the RESET pads.
 
+![Assembled case](images/assembled.png)
+
+## Preview
+
+![Exploded view: lid, XIAO board and base](images/exploded.png)
+
+| Base | Lid (underside) |
+|---|---|
+| ![Base](images/base.png) | ![Lid underside](images/lid_bottom.png) |
+
+The board in the exploded view is a simplified stand-in (PCB plus USB-C), not the real module.
+
 ## Files
 
 | File | Contents |
@@ -16,6 +28,7 @@ Two-part case (base + snap-fit lid) for the
 | `xiao_samd21_base.3mf` / `.stl` | Base only |
 | `xiao_samd21_lid.3mf` / `.stl` | Lid only (already oriented, top face on the bed) |
 | `xiao_samd21_case.py` | Parametric generator |
+| `render_previews.py` | Renders the images in `images/` |
 
 ## Printing
 
@@ -68,6 +81,12 @@ uv run xiao_samd21_case.py
 ```
 
 Overwrites every `.stl` and `.3mf` in the folder.
+
+To refresh the preview images after changing parameters:
+
+```
+uv run render_previews.py
+```
 
 ## License
 

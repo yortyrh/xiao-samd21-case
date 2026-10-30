@@ -127,3 +127,6 @@ requires-dist = [
     { name = "manifold3d", specifier = ">=3.5.4" },
     { name = "numpy", specifier = ">=2.5.4" },
 ]
+
+[package.metadata.requires-dev]
+dev = []

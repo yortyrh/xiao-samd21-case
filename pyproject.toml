@@ -7,3 +7,6 @@ dependencies = [
     "manifold3d>=3.5.4",
     "numpy>=2.5.4",
 ]
+
+[dependency-groups]
+dev = []
