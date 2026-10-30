@@ -68,3 +68,7 @@ uv run xiao_samd21_case.py
 ```
 
 Overwrites every `.stl` and `.3mf` in the folder.
+
+## License
+
+[MIT](LICENSE)
