@@ -9,7 +9,7 @@ All dimensions in mm. Check them with calipers before printing.
 import struct
 import zipfile
 import numpy as np
-from manifold3d import Manifold
+from manifold3d import Manifold, OpType
 
 # --- XIAO SAMD21 -------------------------------------------------------------
 PCB_L = 21.3          # length (X axis, USB-C at -X)
@@ -36,6 +36,24 @@ LIP_T = 1.0
 LIP_CLR = 0.15        # fit clearance (raise to 0.2 if too tight)
 USB_OPEN_W = 9.8
 USB_RECESS_W, USB_RECESS_H, USB_RECESS_D = 12.6, 7.0, 0.8  # recess for the cable overmold
+# "LuLu" engraved on the bottom of the base
+ENGRAVE_TEXT = True
+ENGRAVE_DEPTH = 0.4
+ENGRAVE_H = 7.0       # letter height
+ENGRAVE_STROKE = 1.2
+ENGRAVE_GAP = 1.2     # between letters
+
+# face engraved on the lid top: two eyes and a smile
+FACE = True
+FACE_DEPTH = 0.4
+FACE_STROKE = 1.2
+FACE_EYE_R = 1.2
+FACE_EYE_X = -7.35    # eyes at +-FACE_EYE_Y
+FACE_EYE_Y = 6.2
+SMILE_R = 7.0         # radius of the mouth arc
+SMILE_HALF_ANGLE = 55  # degrees each side of the arc center
+SMILE_CX = -2.0       # arc center X (the mouth bulges towards +X, away from the eyes)
+
 SEG = 48
 
 IN_L = PCB_L + 2 * CLR
@@ -62,6 +80,59 @@ def rbox(sx, sy, sz, r, x=0.0, y=0.0, z=0.0):
     return hull.translate((x, y, z))
 
 
+def engrave_lulu():
+    """"LuLu" as a cutter on the bottom face, readable looking at the base from below.
+
+    Letters are built from boxes and rings in text coordinates (tx right, ty up),
+    then mirrored in X because the bottom face is seen from -Z.
+    """
+    h, st, gap = ENGRAVE_H, ENGRAVE_STROKE, ENGRAVE_GAP
+    uw = 3.6              # width of a "u"
+    ux = 4.5              # x-height of a "u"
+    d = ENGRAVE_DEPTH + 1.0   # cutter pokes out below z=0
+
+    def bar(x0, y0, w, hh):
+        return box(w, hh, d, x=x0 + w / 2, y=y0 + hh / 2, z=-1)
+
+    def letter_L(x):
+        return bar(x, 0, st, h) + bar(x, 0, uw, st), uw
+
+    def letter_u(x):
+        ro = uw / 2
+        ring = Manifold.cylinder(d, ro, ro, SEG) - Manifold.cylinder(d, ro - st, ro - st, SEG)
+        # lower half of the ring is the bowl; two stems go up to the x-height
+        bowl = ring.translate((x + ro, ro, -1)) ^ bar(x, 0, uw, ro)
+        stems = bar(x, ro, st, ux - ro) + bar(x + uw - st, ro, st, ux - ro)
+        return bowl + stems, uw
+
+    cutter, x = None, 0.0
+    for build in (letter_L, letter_u, letter_L, letter_u):
+        part, w = build(x)
+        cutter = part if cutter is None else cutter + part
+        x += w + gap
+    total = x - gap
+    # center on the base, mirror X
+    cutter = cutter.translate((-total / 2, -h / 2, 0))
+    return cutter.mirror((1, 0, 0))
+
+
+def face():
+    """Eyes and mouth cutter for the lid top (z = LID_T); the mouth is round-capped and bulges towards +X."""
+    r = FACE_STROKE / 2
+    n = 16
+    h = FACE_DEPTH + 1
+    z = LID_T - FACE_DEPTH
+    dots = []
+    for i in range(n + 1):
+        a = np.radians(-SMILE_HALF_ANGLE + 2 * SMILE_HALF_ANGLE * i / n)
+        dots.append(Manifold.cylinder(h, r, r, 24).translate(
+            (SMILE_CX + SMILE_R * np.cos(a), SMILE_R * np.sin(a), z)))
+    cutter = Manifold.batch_boolean([Manifold.batch_hull(dots[i:i + 2]) for i in range(n)], OpType.Add)
+    for s in (-1, 1):
+        cutter += Manifold.cylinder(h, FACE_EYE_R, FACE_EYE_R, 24).translate((FACE_EYE_X, s * FACE_EYE_Y, z))
+    return cutter
+
+
 def base():
     b = rbox(OUT_L, OUT_W, BASE_H, 2.0)
     # cavity
@@ -76,6 +147,8 @@ def base():
     if HEADER_SLOTS:
         for s in (-1, 1):
             b -= box(slot_len, 2.9, FLOOR + 2, y=s * PIN_ROW_Y, z=-1)
+    if ENGRAVE_TEXT:
+        b -= engrave_lulu()
     # U-shaped USB-C opening, open at the top (the PCB drops in from above)
     usb_bot = USB_Z - (USB_H + 0.6) / 2
     b -= box(WALL + 2, USB_OPEN_W, BASE_H, x=-OUT_L / 2, z=usb_bot)
@@ -99,6 +172,8 @@ def lid():
         for sy in (-1, 1):
             l += box(1.6, 1.6, post_h,
                      x=sx * (PCB_L / 2 - 1.2), y=sy * (PCB_W / 2 - 1.2), z=-post_h)
+    if FACE:
+        l -= face()
     return l
 
 
