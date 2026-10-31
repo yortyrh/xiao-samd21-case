@@ -3,7 +3,7 @@
 Two-part case (base + snap-fit lid) for the
 [Seeed Studio XIAO SAMD21](https://wiki.seeedstudio.com/Seeeduino-XIAO/).
 
-- Outer size: **24.7 × 21.5 × 8.5 mm**
+- Outer size: **25.0 × 21.6 × 8.9 mm**
 - Flat bottom: no floor slots for the male headers (set `HEADER_SLOTS = True` to cut them).
 - USB-C opening with an outer recess for the cable overmold.
 
@@ -75,8 +75,8 @@ All dimensions are at the top of `xiao_samd21_case.py`. Measure the board with c
 | `CLR` | 0.25 | Clearance between PCB and wall |
 | `HEADERS` | `True` | `False` to lower the PCB (no header height) |
 | `HEADER_SLOTS` | `False` | `True` to cut floor slots for male headers |
-| `PCB_T` | 1.2 | Actual PCB thickness |
-| `USB_OVERHANG` | 1.0 | How far the USB-C sticks out past the PCB |
+| `PCB_T` | 1.6 | Actual PCB thickness |
+| `USB_OVERHANG` | 1.3 | How far the USB-C sticks out past the PCB |
 
 ## Regenerating the models
 
