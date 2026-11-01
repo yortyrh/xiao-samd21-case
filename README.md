@@ -95,6 +95,22 @@ To refresh the preview images after changing parameters:
 uv run render_previews.py
 ```
 
+## LiveUse projects
+
+This repository is one of four that make up LiveUse. LuLu is the device: a XIAO SAMD21 in the printed case, running the LiveUse firmware.
+
+| Repository | Visibility | What it holds |
+|---|---|---|
+| [`liveuse`](https://github.com/yortyrh/liveuse) | Public | The macOS app (Tauri 2) and the website (Next.js). It reads `manifest.json` and `apps.json` from `liveuse-releases` and flashes LuLu |
+| [`liveuse-firmware-xiao-samd21`](https://github.com/yortyrh/liveuse-firmware-xiao-samd21) | Private | Firmware source: USB HID mouse and keyboard driven by CDC serial commands. Its builds are published to `liveuse-releases` |
+| [`liveuse-releases`](https://github.com/yortyrh/liveuse-releases) | Public | Firmware images and app installers, `manifest.json`, `apps.json`, and the firmware guide |
+| [`xiao-samd21-case`](https://github.com/yortyrh/xiao-samd21-case) (this one) | Public | The LuLu case. The app and the website use its renders |
+
+Hardware:
+
+- Board: [Seeed Studio XIAO SAMD21 (Seeeduino XIAO)](https://wiki.seeedstudio.com/Seeeduino-XIAO/).
+- Case: [`xiao-samd21-case` on Creality Cloud](https://www.crealitycloud.com/model-detail/xiao-samd21-case).
+
 ## License
 
 [MIT](LICENSE)
